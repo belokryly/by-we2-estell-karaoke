@@ -3,6 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="format-detection" content="telephone=no, address=no, email=no, date=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
 <title>ESTELLE — Karaoke Bar · Lounge · Brooklyn</title>
 <meta name="description" content="Estelle Karaoke Bar in Brooklyn. Sing, drink, dance. 50,000+ songs, neon nights, signature cocktails. Open 8 PM – 4 AM, every day." />
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -604,13 +606,11 @@
   .back-to-guide:hover svg { transform: translateX(-3px); }
 
   /* When the back-to-guide bar is visible, push the header down to make room */
-  body.has-back-bar .header { top: 38px; }
-  body.has-back-bar .vibe-bar { margin-top: 38px; }
+  body.has-back-bar .header { top: var(--back-bar-h, 38px); }
+  body.has-back-bar .vibe-bar { margin-top: var(--back-bar-h, 38px); }
   @media (max-width: 700px) {
     .back-to-guide-bar { padding: 0.4rem 0.75rem; }
     .back-to-guide { font-size: 0.7rem; padding: 0.35rem 0.85rem 0.35rem 0.7rem; gap: 0.45rem; letter-spacing: 0.18em; }
-    body.has-back-bar .header { top: 34px; }
-    body.has-back-bar .vibe-bar { margin-top: 34px; }
   }
 
   /* ===== Mobile-only vibe button in header ===== */
@@ -769,6 +769,14 @@
     overflow-y: auto;
   }
   .mobile-menu.open { transform: translateX(0); }
+  /* Push the menu below the Back-to-Guide bar so it doesn't cover it */
+  body.has-back-bar .mobile-menu {
+    top: var(--back-bar-h, 38px);
+    height: calc(100dvh - var(--back-bar-h, 38px));
+  }
+  body.has-back-bar .mobile-menu-overlay {
+    top: var(--back-bar-h, 38px);
+  }
 
   /* Decorative neon glows inside the panel */
   .mobile-menu::before {
@@ -915,14 +923,26 @@
     text-shadow: 0 0 4px var(--neon-yellow), 0 0 12px var(--neon-yellow-glow);
   }
   .mobile-menu-ig {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
     font-family: 'Bebas Neue', sans-serif;
     font-size: 0.95rem;
     letter-spacing: 0.18em;
     color: var(--neon-cyan);
     text-decoration: none;
     text-transform: uppercase;
+    transition: text-shadow 0.3s, color 0.3s;
   }
-  .mobile-menu-ig:hover { text-shadow: 0 0 8px var(--neon-cyan-glow); }
+  .mobile-menu-ig svg {
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
+    filter: drop-shadow(0 0 4px var(--neon-cyan-glow));
+    transition: transform 0.3s;
+  }
+  .mobile-menu-ig:hover { text-shadow: 0 0 8px var(--neon-cyan-glow); color: #fff; }
+  .mobile-menu-ig:hover svg { transform: scale(1.08); }
 
   /* Lock body scroll when menu is open */
   body.menu-open { overflow: hidden; }
@@ -3468,7 +3488,10 @@
   </nav>
   <div class="mobile-menu-foot">
     <a href="tel:+17187692100" class="mobile-menu-phone">+1 718 769 2100</a>
-    <a href="https://www.instagram.com/estelle_karaoke_bar/" target="_blank" rel="noopener" class="mobile-menu-ig">Instagram ↗</a>
+    <a href="https://www.instagram.com/estelle_karaoke_bar/" target="_blank" rel="noopener" class="mobile-menu-ig" x-apple-data-detectors="false">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+      <span>Instagram</span>
+    </a>
   </div>
 </aside>
 
@@ -5295,6 +5318,24 @@
     if (fromQuery || fromReferrer) {
       backBar.classList.add('visible');
       document.body.classList.add('has-back-bar');
+
+      // Measure the actual rendered height of the back bar and expose it as a CSS variable
+      // so the header, vibe-bar and mobile menu all sit below it correctly on every viewport.
+      function syncBackBarHeight() {
+        const h = backBar.getBoundingClientRect().height;
+        if (h > 0) {
+          document.documentElement.style.setProperty('--back-bar-h', h + 'px');
+        }
+      }
+      syncBackBarHeight();
+      // Re-measure after the slide-in animation finishes and on resize/font load
+      setTimeout(syncBackBarHeight, 600);
+      window.addEventListener('load', syncBackBarHeight);
+      window.addEventListener('resize', syncBackBarHeight);
+      // Also re-measure when fonts load (Bebas Neue can change line-height)
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(syncBackBarHeight);
+      }
       // Re-measure header so vibe-bar follows the offset
       setTimeout(syncVibeBarPos, 50);
     }
