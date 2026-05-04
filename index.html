@@ -684,13 +684,261 @@
     box-shadow: 0 0 8px var(--neon-cyan-glow);
   }
 
+  /* ===== Mobile burger button (right of vibe) ===== */
+  .header-burger {
+    display: none;
+    width: 38px;
+    height: 38px;
+    background: rgba(7, 3, 10, 0.5);
+    border: 1px solid var(--line-strong);
+    border-radius: 8px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s;
+    -webkit-tap-highlight-color: transparent;
+    flex-shrink: 0;
+  }
+  .header-burger:hover, .header-burger:focus-visible {
+    border-color: var(--neon-pink);
+    box-shadow: 0 0 14px var(--neon-pink-glow);
+  }
+  .header-burger span {
+    display: block;
+    width: 18px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--neon-pink);
+    box-shadow: 0 0 6px var(--neon-pink), 0 0 12px var(--neon-pink-glow);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1),
+                opacity 0.25s ease,
+                background 0.3s,
+                box-shadow 0.3s;
+  }
+  .header-burger span:nth-child(2) { width: 14px; background: var(--neon-cyan); box-shadow: 0 0 6px var(--neon-cyan), 0 0 12px var(--neon-cyan-glow); }
+  .header-burger span:nth-child(3) { width: 18px; background: var(--neon-yellow); box-shadow: 0 0 6px var(--neon-yellow), 0 0 12px var(--neon-yellow-glow); }
+  /* Open state: animate to X */
+  .header-burger.open span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+    width: 18px;
+  }
+  .header-burger.open span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0.2);
+  }
+  .header-burger.open span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+    width: 18px;
+  }
+
+  /* ===== Off-canvas mobile menu ===== */
+  .mobile-menu-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(5, 2, 8, 0.78);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    z-index: 110;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+  }
+  .mobile-menu-overlay.open {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .mobile-menu {
+    position: fixed;
+    top: 0; right: 0;
+    width: min(82vw, 340px);
+    height: 100dvh;
+    max-height: 100vh;
+    background: linear-gradient(180deg, #0E0612 0%, #07030A 100%);
+    border-left: 1px solid var(--line-strong);
+    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.65);
+    z-index: 120;
+    padding: 1.4rem 1.5rem 2rem;
+    transform: translateX(100%);
+    transition: transform 0.42s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  .mobile-menu.open { transform: translateX(0); }
+
+  /* Decorative neon glows inside the panel */
+  .mobile-menu::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--neon-pink), var(--neon-cyan), transparent);
+    box-shadow: 0 0 12px var(--neon-pink-glow);
+    pointer-events: none;
+  }
+  .mobile-menu::after {
+    content: '';
+    position: absolute;
+    bottom: 30%; left: -40%;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--neon-pink-glow), transparent 70%);
+    filter: blur(20px);
+    pointer-events: none;
+  }
+
+  .mobile-menu-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+    padding-bottom: 1.2rem;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    z-index: 2;
+  }
+  .mobile-menu-logo {
+    font-family: 'Monoton', cursive;
+    font-size: 1.3rem;
+    color: var(--neon-pink);
+    text-shadow: 0 0 4px var(--neon-pink), 0 0 12px var(--neon-pink-glow);
+    letter-spacing: 0.06em;
+    line-height: 1;
+  }
+  .mobile-menu-logo-tag {
+    display: block;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.55rem;
+    letter-spacing: 0.34em;
+    color: var(--neon-cyan);
+    text-shadow: 0 0 8px var(--neon-cyan-glow);
+    margin-top: 6px;
+    text-transform: uppercase;
+  }
+  .mobile-menu-close {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 46, 200, 0.08);
+    border: 1px solid var(--neon-pink);
+    color: var(--neon-pink);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+    flex-shrink: 0;
+  }
+  .mobile-menu-close:hover, .mobile-menu-close:focus-visible {
+    background: var(--neon-pink);
+    color: #fff;
+    box-shadow: 0 0 14px var(--neon-pink-glow);
+  }
+
+  .mobile-menu-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    position: relative;
+    z-index: 2;
+    flex-grow: 1;
+  }
+  .mobile-menu-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 1.05rem 0.5rem;
+    color: var(--text);
+    text-decoration: none;
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.55rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    border-bottom: 1px solid var(--line);
+    transition: all 0.3s;
+    position: relative;
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  .mobile-menu.open .mobile-menu-nav a {
+    animation: navItemIn 0.45s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  .mobile-menu.open .mobile-menu-nav a:nth-child(1) { animation-delay: 0.10s; }
+  .mobile-menu.open .mobile-menu-nav a:nth-child(2) { animation-delay: 0.16s; }
+  .mobile-menu.open .mobile-menu-nav a:nth-child(3) { animation-delay: 0.22s; }
+  .mobile-menu.open .mobile-menu-nav a:nth-child(4) { animation-delay: 0.28s; }
+  .mobile-menu.open .mobile-menu-nav a:nth-child(5) { animation-delay: 0.34s; }
+  .mobile-menu.open .mobile-menu-nav a:nth-child(6) { animation-delay: 0.40s; }
+  @keyframes navItemIn {
+    to { opacity: 1; transform: translateX(0); }
+  }
+  .mobile-menu-nav a::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--neon-pink);
+    box-shadow: 0 0 8px var(--neon-pink-glow);
+    flex-shrink: 0;
+    opacity: 0.6;
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  .mobile-menu-nav a:hover, .mobile-menu-nav a:active {
+    color: var(--neon-pink);
+    text-shadow: 0 0 8px var(--neon-pink-glow);
+    padding-left: 1rem;
+  }
+  .mobile-menu-nav a:hover::before, .mobile-menu-nav a:active::before {
+    opacity: 1;
+    transform: scale(1.4);
+  }
+
+  .mobile-menu-foot {
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    position: relative;
+    z-index: 2;
+  }
+  .mobile-menu-phone {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 0.06em;
+    color: var(--neon-yellow);
+    text-decoration: none;
+    text-shadow: 0 0 4px var(--neon-yellow), 0 0 12px var(--neon-yellow-glow);
+  }
+  .mobile-menu-ig {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.18em;
+    color: var(--neon-cyan);
+    text-decoration: none;
+    text-transform: uppercase;
+  }
+  .mobile-menu-ig:hover { text-shadow: 0 0 8px var(--neon-cyan-glow); }
+
+  /* Lock body scroll when menu is open */
+  body.menu-open { overflow: hidden; }
+
   @media (max-width: 700px) {
     /* Hide the big vibe pill — it's now in the header */
     .vibe-bar { display: none !important; }
     /* Hide desktop Reserve button — replaced by vibe button */
     .header-reserve { display: none !important; }
-    /* Show mobile vibe button */
+    /* Show mobile vibe button + burger */
     .header-vibe { display: inline-flex; }
+    .header-burger { display: flex; }
+    /* Make sure the right cluster fits comfortably */
+    .header { gap: 0.5rem; }
+    .header-vibe { padding: 0.45rem 0.55rem 0.45rem 0.75rem; gap: 0.45rem; }
+    .header-vibe-label { font-size: 0.65rem; letter-spacing: 0.16em; }
   }
 
   /* ===== Fixed Vibe Bar — sits under the header on all viewports ===== */
@@ -3192,7 +3440,37 @@
       </svg>
     </span>
   </button>
+  <!-- Mobile-only burger — opens the off-canvas menu -->
+  <button class="header-burger" id="headerBurger" aria-label="Open menu" aria-expanded="false" aria-controls="mobileMenu">
+    <span></span><span></span><span></span>
+  </button>
 </header>
+
+<!-- ===================== MOBILE OFF-CANVAS MENU ===================== -->
+<div class="mobile-menu-overlay" id="mobileMenuOverlay" aria-hidden="true"></div>
+<aside class="mobile-menu" id="mobileMenu" aria-hidden="true" aria-labelledby="mobileMenuTitle">
+  <div class="mobile-menu-header">
+    <span class="mobile-menu-logo">
+      ESTELLE
+      <span class="mobile-menu-logo-tag">Karaoke · Lounge</span>
+    </span>
+    <button class="mobile-menu-close" id="mobileMenuClose" aria-label="Close menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <nav class="mobile-menu-nav" aria-label="Site navigation">
+    <a href="#experience" data-mobile-link>Experience</a>
+    <a href="#specials" data-mobile-link>Specials</a>
+    <a href="#menu" data-mobile-link>Menu</a>
+    <a href="#reserve" data-mobile-link>Reserve</a>
+    <a href="#gallery" data-mobile-link>Gallery</a>
+    <a href="#visit" data-mobile-link>Visit</a>
+  </nav>
+  <div class="mobile-menu-foot">
+    <a href="tel:+17187692100" class="mobile-menu-phone">+1 718 769 2100</a>
+    <a href="https://www.instagram.com/estelle_karaoke_bar/" target="_blank" rel="noopener" class="mobile-menu-ig">Instagram ↗</a>
+  </div>
+</aside>
 
 <!-- ===================== HERO ===================== -->
 <section class="hero" id="top">
@@ -4205,6 +4483,52 @@
     headerVibe.addEventListener('click', () => vibeBtn.click());
   }
 
+  // Mobile burger + off-canvas menu
+  const headerBurger = document.getElementById('headerBurger');
+  const mobileMenu = document.getElementById('mobileMenu');
+  const mobileMenuOverlay = document.getElementById('mobileMenuOverlay');
+  const mobileMenuClose = document.getElementById('mobileMenuClose');
+
+  function openMobileMenu() {
+    if (!mobileMenu) return;
+    mobileMenu.classList.add('open');
+    mobileMenuOverlay.classList.add('open');
+    headerBurger.classList.add('open');
+    headerBurger.setAttribute('aria-expanded', 'true');
+    mobileMenu.setAttribute('aria-hidden', 'false');
+    mobileMenuOverlay.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('menu-open');
+  }
+  function closeMobileMenu() {
+    if (!mobileMenu) return;
+    mobileMenu.classList.remove('open');
+    mobileMenuOverlay.classList.remove('open');
+    headerBurger.classList.remove('open');
+    headerBurger.setAttribute('aria-expanded', 'false');
+    mobileMenu.setAttribute('aria-hidden', 'true');
+    mobileMenuOverlay.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('menu-open');
+  }
+  if (headerBurger && mobileMenu) {
+    headerBurger.addEventListener('click', () => {
+      if (mobileMenu.classList.contains('open')) closeMobileMenu();
+      else openMobileMenu();
+    });
+    mobileMenuClose.addEventListener('click', closeMobileMenu);
+    mobileMenuOverlay.addEventListener('click', closeMobileMenu);
+    // Tap a nav link → close menu (the in-page anchor handles scroll)
+    mobileMenu.querySelectorAll('[data-mobile-link]').forEach(link => {
+      link.addEventListener('click', () => {
+        // small delay so the closing animation reads before the scroll begins
+        setTimeout(closeMobileMenu, 80);
+      });
+    });
+    // Escape key closes
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && mobileMenu.classList.contains('open')) closeMobileMenu();
+    });
+  }
+
   // Show the vibe bar immediately
   setTimeout(() => vibeBar.classList.add('visible'), 600);
 
@@ -4636,23 +4960,63 @@
   });
 
   // ---------- Phone mask: US format +1 (XXX) XXX-XXXX ----------
+  // Strategy: track only the digits internally. The visible value is always
+  // a formatted view of those digits. On Backspace/Delete we strip one digit
+  // explicitly before re-formatting, so deletions actually decrement.
   const phoneInput = document.getElementById('phone');
-  function formatPhone(value) {
-    const digits = value.replace(/\D/g, '').slice(0, 11);
-    const local = digits.length === 11 && digits.startsWith('1') ? digits.slice(1) : digits.slice(0, 10);
-    if (local.length === 0) return '';
-    if (local.length <= 3) return `+1 (${local}`;
-    if (local.length <= 6) return `+1 (${local.slice(0, 3)}) ${local.slice(3)}`;
-    return `+1 (${local.slice(0, 3)}) ${local.slice(3, 6)}-${local.slice(6)}`;
+
+  function buildPhoneFromDigits(digits) {
+    digits = digits.slice(0, 10);
+    if (digits.length === 0) return '';
+    if (digits.length <= 3) return `+1 (${digits}`;
+    if (digits.length <= 6) return `+1 (${digits.slice(0, 3)}) ${digits.slice(3)}`;
+    return `+1 (${digits.slice(0, 3)}) ${digits.slice(3, 6)}-${digits.slice(6)}`;
   }
-  phoneInput.addEventListener('input', (e) => {
-    e.target.value = formatPhone(e.target.value);
+  function extractDigits(value) {
+    // Strip non-digits, then strip leading "1" (country code) if present
+    let d = value.replace(/\D/g, '');
+    if (d.length > 10 && d.startsWith('1')) d = d.slice(1);
+    return d.slice(0, 10);
+  }
+
+  phoneInput.addEventListener('beforeinput', (e) => {
+    // For deletion events, manually decrement the digit count so the next
+    // 'input' event sees one fewer digit instead of just re-formatting the
+    // same string and visually "restoring" the deleted digit.
+    if (e.inputType === 'deleteContentBackward' || e.inputType === 'deleteContentForward') {
+      const digits = extractDigits(phoneInput.value);
+      if (digits.length === 0) {
+        // Nothing to delete; still allow the browser to clear the input
+        return;
+      }
+      e.preventDefault();
+      const newDigits = digits.slice(0, -1);
+      phoneInput.value = buildPhoneFromDigits(newDigits);
+      // Move caret to the end of the new value
+      const pos = phoneInput.value.length;
+      phoneInput.setSelectionRange(pos, pos);
+    }
   });
-  phoneInput.addEventListener('focus', (e) => {
-    if (!e.target.value) e.target.value = '+1 ';
+
+  phoneInput.addEventListener('input', () => {
+    const digits = extractDigits(phoneInput.value);
+    phoneInput.value = buildPhoneFromDigits(digits);
+    const pos = phoneInput.value.length;
+    phoneInput.setSelectionRange(pos, pos);
   });
-  phoneInput.addEventListener('blur', (e) => {
-    if (e.target.value === '+1 ' || e.target.value === '+1') e.target.value = '';
+
+  phoneInput.addEventListener('focus', () => {
+    if (!phoneInput.value) {
+      phoneInput.value = '+1 ';
+      const pos = phoneInput.value.length;
+      // Defer caret placement after focus has settled
+      requestAnimationFrame(() => phoneInput.setSelectionRange(pos, pos));
+    }
+  });
+  phoneInput.addEventListener('blur', () => {
+    if (phoneInput.value === '+1 ' || phoneInput.value === '+1' || extractDigits(phoneInput.value).length === 0) {
+      phoneInput.value = '';
+    }
   });
 
   // ---------- Event Type cards ----------
