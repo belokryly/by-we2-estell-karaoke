@@ -534,64 +534,69 @@
     flex-wrap: wrap;
   }
 
-  /* ===== Back-to-Guide pill (only visible when coming from guide.html) ===== */
-  .back-to-guide {
+  /* ===== Back-to-Guide pill — sits ABOVE the header, top-center ===== */
+  .back-to-guide-bar {
     position: fixed;
-    top: 1rem;
-    left: 1rem;
-    z-index: 200;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 250;
     display: none;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.55rem 1rem 0.55rem 0.85rem;
-    background: rgba(7, 3, 10, 0.85);
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    background: linear-gradient(180deg, rgba(7, 3, 10, 0.95), rgba(7, 3, 10, 0.85));
     backdrop-filter: blur(20px) saturate(180%);
     -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid var(--line-strong);
+    border-bottom: 1px solid var(--line-strong);
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.5);
+    animation: backToGuideBarIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.4s both;
+  }
+  .back-to-guide-bar.visible { display: flex; }
+  @keyframes backToGuideBarIn {
+    from { transform: translateY(-100%); }
+    to { transform: translateY(0); }
+  }
+  .back-to-guide {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.4rem 0.95rem 0.4rem 0.8rem;
+    background: rgba(41, 227, 255, 0.10);
+    border: 1px solid var(--neon-cyan);
     border-radius: 100px;
     color: var(--neon-cyan);
     text-decoration: none;
     font-family: 'Bebas Neue', sans-serif;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     letter-spacing: 0.22em;
     text-transform: uppercase;
     text-shadow: 0 0 6px var(--neon-cyan-glow);
-    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45), 0 0 14px rgba(41, 227, 255, 0.18);
+    box-shadow: 0 0 14px rgba(41, 227, 255, 0.18);
     transition: all 0.3s;
-    opacity: 0;
-    transform: translateY(-8px);
-    animation: backToGuideIn 0.5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.6s forwards;
   }
-  .back-to-guide.visible { display: inline-flex; }
   .back-to-guide:hover {
-    background: rgba(41, 227, 255, 0.10);
-    border-color: var(--neon-cyan);
-    color: #fff;
-    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.45), 0 0 22px var(--neon-cyan-glow);
-    transform: translateY(0) scale(1.02);
+    background: var(--neon-cyan);
+    color: #07030A;
+    text-shadow: none;
+    box-shadow: 0 0 22px var(--neon-cyan-glow);
+    transform: translateY(-1px);
   }
   .back-to-guide svg {
-    width: 14px;
-    height: 14px;
+    width: 13px;
+    height: 13px;
     stroke: currentColor;
     transition: transform 0.3s;
   }
   .back-to-guide:hover svg { transform: translateX(-3px); }
-  @keyframes backToGuideIn {
-    to { opacity: 1; transform: translateY(0); }
-  }
+
+  /* When the back-to-guide bar is visible, push the header down to make room */
+  body.has-back-bar .header { top: 38px; }
+  body.has-back-bar .vibe-bar { margin-top: 38px; }
   @media (max-width: 700px) {
-    .back-to-guide {
-      top: 0.7rem;
-      left: 0.7rem;
-      padding: 0.45rem 0.85rem 0.45rem 0.7rem;
-      font-size: 0.7rem;
-      gap: 0.4rem;
-    }
-    .back-to-guide .lbl-long { display: none; }
-  }
-  @media (min-width: 701px) {
-    .back-to-guide .lbl-short { display: none; }
+    .back-to-guide-bar { padding: 0.4rem 0.75rem; }
+    .back-to-guide { font-size: 0.7rem; padding: 0.35rem 0.85rem 0.35rem 0.7rem; gap: 0.45rem; letter-spacing: 0.18em; }
+    body.has-back-bar .header { top: 34px; }
+    body.has-back-bar .vibe-bar { margin-top: 34px; }
   }
 
   /* ===== Mobile-only vibe button in header ===== */
@@ -2910,6 +2915,11 @@
     padding: 0.7rem 1rem;
     grid-template-columns: 1fr 1.4fr 1fr;
     gap: 0.5rem;
+    transform: translateY(100%);
+    transition: transform 0.45s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .mobile-bar.visible {
+    transform: translateY(0);
   }
   .mobile-bar a {
     display: flex;
@@ -2938,7 +2948,7 @@
 
   @media (max-width: 700px) {
     .mobile-bar { display: grid; }
-    body { padding-bottom: 76px; }
+    body.mobile-bar-visible { padding-bottom: 76px; }
     section.block { padding: 5rem 1.25rem; }
     .hero { padding: 7rem 1.25rem 5rem; min-height: 90vh; }
     .booking-form { padding: 1.8rem 1.4rem; }
@@ -3105,12 +3115,13 @@
 </div>
 <div class="spotlight" id="spotlight"></div>
 
-<!-- Back-to-Guide pill — visible only when arriving from guide.html -->
-<a href="guide.html" class="back-to-guide" id="backToGuide" aria-label="Back to walkthrough guide">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
-  <span class="lbl-long">Back to Guide</span>
-  <span class="lbl-short">Guide</span>
-</a>
+<!-- Back-to-Guide bar — visible only when arriving from guide.html, sits above the header -->
+<div class="back-to-guide-bar" id="backToGuideBar">
+  <a href="guide.html" class="back-to-guide" aria-label="Back to walkthrough guide">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+    <span>Back to Guide</span>
+  </a>
+</div>
 
 <!-- Club light show overlay — activates when the beat plays -->
 <div class="club-lights" id="clubLights" aria-hidden="true">
@@ -4094,9 +4105,10 @@
   }
   document.querySelectorAll('.gallery-img, .exp-card-img, .about-visual-img, .menu-item-img').forEach(verifyImage);
 
-  // ---------- Header scroll state + Floating actions visibility + Vibe-bar position ----------
+  // ---------- Header scroll state + Floating actions visibility + Mobile bar visibility + Vibe-bar position ----------
   const header = document.getElementById('header');
   const floatActions = document.getElementById('floatActions');
+  const mobileBar = document.querySelector('.mobile-bar');
   const vibeBarEl = document.getElementById('vibeBar');
 
   function syncVibeBarPos() {
@@ -4113,8 +4125,10 @@
     const y = window.scrollY;
     if (y > 40) header.classList.add('scrolled');
     else header.classList.remove('scrolled');
-    if (y > window.innerHeight * 0.6) floatActions.classList.add('visible');
-    else floatActions.classList.remove('visible');
+    const showActions = y > window.innerHeight * 0.6;
+    floatActions.classList.toggle('visible', showActions);
+    if (mobileBar) mobileBar.classList.toggle('visible', showActions);
+    document.body.classList.toggle('mobile-bar-visible', showActions);
     // Re-measure header after class change so vibe-bar follows
     syncVibeBarPos();
   });
@@ -4889,8 +4903,8 @@
   // Show when arriving from the walkthrough — via ?from=guide URL param
   // OR when the page was opened from guide.html (referrer match) on the same origin.
   (function() {
-    const backBtn = document.getElementById('backToGuide');
-    if (!backBtn) return;
+    const backBar = document.getElementById('backToGuideBar');
+    if (!backBar) return;
     const params = new URLSearchParams(window.location.search);
     const fromQuery = params.get('from') === 'guide';
     let fromReferrer = false;
@@ -4901,7 +4915,10 @@
       }
     } catch (_) {}
     if (fromQuery || fromReferrer) {
-      backBtn.classList.add('visible');
+      backBar.classList.add('visible');
+      document.body.classList.add('has-back-bar');
+      // Re-measure header so vibe-bar follows the offset
+      setTimeout(syncVibeBarPos, 50);
     }
   })();
 
