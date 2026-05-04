@@ -206,27 +206,6 @@
       0 0 6px var(--neon-yellow-glow);
   }
 
-  /* Inline-accent words inside section headings get a soft, slow pulse
-     instead of heavy continuous glow — readability first. */
-  .section-head h2 .neon-pink,
-  .section-head h2 .neon-cyan,
-  .section-head h2 .neon-yellow {
-    animation: gentle-glow 3.6s ease-in-out infinite;
-  }
-  @keyframes gentle-glow {
-    0%, 100% {
-      text-shadow:
-        0 0 1px currentColor,
-        0 0 4px currentColor;
-    }
-    50% {
-      text-shadow:
-        0 0 2px currentColor,
-        0 0 10px currentColor,
-        0 0 18px currentColor;
-    }
-  }
-
   /* Smoother flicker for big standalone neon titles (e.g. "SEE YOU TONIGHT").
      Quick, low-frequency dips so it pulses without going unreadable. */
   @keyframes neon-flicker {
@@ -1039,7 +1018,6 @@
     display: inline-block;
     transform: rotate(-2deg);
     margin-left: 0.2em;
-    animation: gentle-glow 3.6s ease-in-out infinite;
   }
   .section-head p {
     color: var(--muted);
@@ -1336,7 +1314,6 @@
     color: var(--neon-yellow);
     text-shadow: 0 0 2px var(--neon-yellow), 0 0 12px var(--neon-yellow-glow);
     margin-bottom: 0.5rem;
-    animation: gentle-glow 3.6s ease-in-out infinite;
   }
   .happy-hour-time {
     font-family: 'Bebas Neue', sans-serif;
@@ -1386,7 +1363,6 @@
     color: var(--neon-pink);
     text-shadow: 0 0 2px var(--neon-pink), 0 0 12px var(--neon-pink-glow);
     margin-bottom: 0.4rem;
-    animation: gentle-glow 3.6s ease-in-out infinite;
   }
   .star-title .sub {
     font-family: 'Pacifico', cursive;
